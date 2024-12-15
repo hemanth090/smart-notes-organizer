@@ -95,13 +95,18 @@ function uploadFile(file) {
 
     fetch(apiUrl, {
         method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+        },
         body: formData,
-        signal: controller.signal
+        signal: controller.signal,
+        credentials: 'same-origin',
+        mode: 'cors'
     })
     .then(async response => {
         clearTimeout(timeoutId);
         console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
         
         if (!response.ok) {
             const errorText = await response.text();

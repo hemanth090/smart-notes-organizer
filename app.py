@@ -18,16 +18,18 @@ app = Flask(__name__,
     template_folder='templates'
 )
 
-# Configure CORS
+# Enable CORS for all routes
 CORS(app, resources={
-    r"/process_image": {
+    r"/*": {
         "origins": "*",
-        "methods": ["POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
     }
 })
 
-app.secret_key = 'your_secret_key_here'  # Add a secret key for flash messages
+# Configure app
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.secret_key = 'your_secret_key_here'
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
@@ -208,8 +210,15 @@ def documentation():
 def support():
     return render_template('support.html')
 
-@app.route('/process_image', methods=['POST'])
+@app.route('/process_image', methods=['POST', 'OPTIONS'])
 def analyze_image():
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        return response
+
     logger.debug(f"Request Method: {request.method}")
     logger.debug(f"Request Headers: {dict(request.headers)}")
     logger.debug(f"Request Files: {request.files}")
@@ -241,9 +250,11 @@ def analyze_image():
                 enhanced_notes = enhance_notes(extracted_text)
                 logger.debug("Successfully processed image and enhanced notes")
                 
-                return jsonify({
+                response = jsonify({
                     'enhanced_notes': enhanced_notes
                 })
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
                 
             except Exception as e:
                 logger.error(f"Error processing image: {str(e)}")
