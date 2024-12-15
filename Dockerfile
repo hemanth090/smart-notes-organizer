@@ -4,6 +4,7 @@ FROM python:3.11-slim
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
+    tesseract-ocr-eng \
     libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
@@ -29,9 +30,19 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=10000
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
 
 # Expose the port
 EXPOSE ${PORT}
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "--bind", "0.0.0.0:10000", "app:app"]
+CMD gunicorn --workers=4 \
+    --threads=4 \
+    --worker-class=gthread \
+    --worker-tmp-dir=/dev/shm \
+    --timeout=120 \
+    --log-level=info \
+    --bind=0.0.0.0:${PORT} \
+    --access-logfile=- \
+    --error-logfile=- \
+    app:app

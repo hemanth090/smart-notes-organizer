@@ -209,3 +209,188 @@ window.copyNotes = function() {
             }, 2000);
         });
 }
+
+// DOM Elements
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const loading = document.getElementById('loading');
+const result = document.getElementById('result');
+const enhancedNotes = document.getElementById('enhanced-notes');
+
+// Initialize marked for markdown rendering
+marked.setOptions({
+    breaks: true,
+    gfm: true,
+    headerIds: true,
+    highlight: function(code, lang) {
+        if (window.hljs) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return hljs.highlight(lang, code).value;
+                } catch (e) {}
+            }
+            try {
+                return hljs.highlightAuto(code).value;
+            } catch (e) {}
+        }
+        return code;
+    }
+});
+
+// Event Listeners
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        uploadFile(file);
+    }
+});
+
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+});
+
+// Highlight dropzone when dragging over it
+['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, unhighlight, false);
+});
+
+// Handle dropped files
+dropzone.addEventListener('drop', handleDrop, false);
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+function highlight(e) {
+    dropzone.classList.add('border-blue-500');
+}
+
+function unhighlight(e) {
+    dropzone.classList.remove('border-blue-500');
+}
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const file = dt.files[0];
+    uploadFile(file);
+}
+
+function uploadFile(file) {
+    if (!file || !file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    // Show loading state
+    loading.classList.remove('hidden');
+    dropzone.classList.add('hidden');
+    result.classList.add('hidden');
+
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
+    // Get the API URL
+    const apiUrl = window.location.origin + '/process_image';
+    console.log('Sending request to:', apiUrl);
+
+    fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal,
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(async response => {
+        clearTimeout(timeoutId);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error(response.status === 413 ? 'Image file is too large (max 16MB)' : 
+                          `Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Processing successful:', data);
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        displayResults(data.enhanced_notes);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error processing image: ' + error.message);
+    })
+    .finally(() => {
+        loading.classList.add('hidden');
+        dropzone.classList.remove('hidden');
+        clearTimeout(timeoutId);
+    });
+}
+
+function displayResults(markdown) {
+    if (!markdown) {
+        alert('No enhanced notes received from the server');
+        return;
+    }
+
+    try {
+        // Show results
+        result.classList.remove('hidden');
+        
+        // Render markdown
+        enhancedNotes.innerHTML = marked.parse(markdown);
+        
+        // Highlight code blocks if hljs is available
+        if (window.hljs) {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
+        }
+    } catch (error) {
+        console.error('Error displaying results:', error);
+        alert('Error displaying results. Please try again.');
+    }
+}
+
+function copyNotes() {
+    const text = enhancedNotes.innerText;
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            alert('Notes copied to clipboard!');
+        })
+        .catch(err => {
+            console.error('Failed to copy text:', err);
+            alert('Failed to copy notes. Please try selecting and copying manually.');
+        });
+}
+
+function resetForm() {
+    // Clear file input
+    fileInput.value = '';
+    
+    // Reset UI
+    result.classList.add('hidden');
+    dropzone.classList.remove('hidden');
+    loading.classList.add('hidden');
+    
+    // Clear results
+    enhancedNotes.innerHTML = '';
+}
