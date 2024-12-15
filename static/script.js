@@ -92,6 +92,9 @@ function uploadFile(file) {
 
     fetch('/process_image', {
         method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        },
         body: formData,
         signal: controller.signal
     })

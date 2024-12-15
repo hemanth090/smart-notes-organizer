@@ -197,8 +197,16 @@ def documentation():
 def support():
     return render_template('support.html')
 
-@app.route('/process_image', methods=['POST'])
+@app.route('/process_image', methods=['POST', 'OPTIONS'])
 def analyze_image():
+    # Handle preflight request
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        return response
+
     logger.debug("Received image upload request")
     logger.debug(f"Files in request: {request.files}")
     
@@ -227,9 +235,11 @@ def analyze_image():
             enhanced_notes = enhance_notes(extracted_text)
             logger.debug("Successfully processed image and enhanced notes")
             
-            return jsonify({
+            response = jsonify({
                 'enhanced_notes': enhanced_notes
             })
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
             
         except Exception as e:
             logger.error(f"Error processing image: {str(e)}")
