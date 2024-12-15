@@ -5,8 +5,17 @@ from PIL import Image
 import pytesseract
 import cv2
 import numpy as np
+import logging
 
-app = Flask(__name__, static_url_path='/static', static_folder='static')
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__, 
+    static_url_path='',
+    static_folder='static',
+    template_folder='templates'
+)
 app.secret_key = 'your_secret_key_here'  # Add a secret key for flash messages
 
 # Configure Gemini API
@@ -190,33 +199,42 @@ def support():
 
 @app.route('/process_image', methods=['POST'])
 def analyze_image():
+    logger.debug("Received image upload request")
+    logger.debug(f"Files in request: {request.files}")
+    
     if 'image' not in request.files:
+        logger.error("No image file in request")
         return jsonify({'error': 'No image provided'}), 400
     
     file = request.files['image']
     if file.filename == '':
+        logger.error("Empty filename")
         return jsonify({'error': 'No selected file'}), 400
     
     if file:
         try:
+            logger.debug(f"Processing image: {file.filename}")
             # Open and process the image
             image = Image.open(file.stream)
             
             # Extract text from image
             extracted_text = process_image(image)
             if not extracted_text:
+                logger.error("No text extracted from image")
                 return jsonify({'error': 'No text could be extracted from the image'}), 400
             
             # Enhance the extracted text
             enhanced_notes = enhance_notes(extracted_text)
+            logger.debug("Successfully processed image and enhanced notes")
             
             return jsonify({
                 'enhanced_notes': enhanced_notes
             })
             
         except Exception as e:
-            print(f"Error processing image: {str(e)}")  # Add logging
+            logger.error(f"Error processing image: {str(e)}")
             return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
+    # Enable debug mode and set host/port
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
