@@ -6,6 +6,7 @@ import pytesseract
 import cv2
 import numpy as np
 import logging
+from flask_cors import CORS
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -16,6 +17,7 @@ app = Flask(__name__,
     static_folder='static',
     template_folder='templates'
 )
+CORS(app)  # Enable CORS for all routes
 app.secret_key = 'your_secret_key_here'  # Add a secret key for flash messages
 
 # Configure Gemini API
@@ -197,17 +199,11 @@ def documentation():
 def support():
     return render_template('support.html')
 
-@app.route('/process_image', methods=['POST', 'OPTIONS'])
+@app.route('/process_image', methods=['POST'])
 def analyze_image():
-    # Handle preflight request
-    if request.method == 'OPTIONS':
-        response = jsonify({'status': 'ok'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'POST')
-        return response
-
     logger.debug("Received image upload request")
+    logger.debug(f"Request Method: {request.method}")
+    logger.debug(f"Request Headers: {request.headers}")
     logger.debug(f"Files in request: {request.files}")
     
     if 'image' not in request.files:
@@ -235,11 +231,9 @@ def analyze_image():
             enhanced_notes = enhance_notes(extracted_text)
             logger.debug("Successfully processed image and enhanced notes")
             
-            response = jsonify({
+            return jsonify({
                 'enhanced_notes': enhanced_notes
             })
-            response.headers.add('Access-Control-Allow-Origin', '*')
-            return response
             
         except Exception as e:
             logger.error(f"Error processing image: {str(e)}")

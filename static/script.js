@@ -92,9 +92,6 @@ function uploadFile(file) {
 
     fetch('/process_image', {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json'
-        },
         body: formData,
         signal: controller.signal
     })
@@ -103,17 +100,7 @@ function uploadFile(file) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const text = await response.text(); // Get the raw text first
-        if (!text) {
-            throw new Error('Empty response from server');
-        }
-        try {
-            return JSON.parse(text); // Try to parse it as JSON
-        } catch (e) {
-            console.error('JSON Parse Error:', e);
-            console.error('Raw response:', text);
-            throw new Error('Invalid JSON response from server');
-        }
+        return response.json();
     })
     .then(data => {
         if (data.error) {
