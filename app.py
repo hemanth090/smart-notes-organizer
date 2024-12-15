@@ -6,7 +6,7 @@ import pytesseract
 import cv2
 import numpy as np
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.secret_key = 'your_secret_key_here'  # Add a secret key for flash messages
 
 # Configure Gemini API
@@ -215,11 +215,8 @@ def analyze_image():
             })
             
         except Exception as e:
+            print(f"Error processing image: {str(e)}")  # Add logging
             return jsonify({'error': str(e)}), 400
 
-@app.route('/static/<path:path>')
-def serve_static(path):
-    return send_from_directory('static', path)
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
