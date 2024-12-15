@@ -190,49 +190,32 @@ def support():
 
 @app.route('/process', methods=['POST'])
 def analyze_image():
-    try:
-        if 'file' not in request.files:
-            return jsonify({'error': 'No image uploaded'}), 400
-        
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({'error': 'No image selected'}), 400
-        
-        # Open and process the image
-        image = Image.open(file.stream)
-        
-        # Extract text from image
-        extracted_text = process_image(image)
-        if not extracted_text:
-            return jsonify({'error': 'No text found in image'}), 400
-        
-        # Enhance the notes
-        enhanced_notes = enhance_notes(extracted_text)
-        
-        return jsonify({
-            'enhanced_text': enhanced_notes
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/submit_feedback', methods=['POST'])
-def submit_feedback():
-    try:
-        name = request.form.get('name')
-        email = request.form.get('email')
-        message = request.form.get('message')
-        
-        # Here you would typically save this to a database or send an email
-        # For now, we'll just print it to the console
-        print(f"Feedback received from {name} ({email}): {message}")
-        
-        flash('Thank you for your feedback!', 'success')
-        return redirect(url_for('support'))
-    except Exception as e:
-        print(f"Error processing feedback: {str(e)}")
-        flash('Sorry, there was an error processing your feedback. Please try again.', 'error')
-        return redirect(url_for('support'))
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+    
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    if file:
+        try:
+            # Open and process the image
+            image = Image.open(file.stream)
+            
+            # Extract text from image
+            extracted_text = process_image(image)
+            if not extracted_text:
+                return jsonify({'error': 'No text could be extracted from the image'}), 400
+            
+            # Enhance the extracted text
+            enhanced_notes = enhance_notes(extracted_text)
+            
+            return jsonify({
+                'enhanced_notes': enhanced_notes
+            })
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400
 
 @app.route('/static/<path:path>')
 def serve_static(path):
