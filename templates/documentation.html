@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Documentation</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Learn how to use Smart Notes Organizer effectively</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar Navigation -->
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sticky top-4">
+                    <nav class="space-y-2">
+                        <a href="#getting-started" class="block text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">Getting Started</a>
+                        <a href="#uploading" class="block text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Uploading Images</a>
+                        <a href="#processing" class="block text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Processing</a>
+                        <a href="#output" class="block text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Output Format</a>
+                        <a href="#tips" class="block text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Tips & Tricks</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <div class="space-y-8">
+                    <!-- Getting Started -->
+                    <section id="getting-started" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Getting Started</h2>
+                        <div class="prose dark:prose-invert max-w-none">
+                            <p>Smart Notes Organizer is a powerful tool that helps you convert your handwritten or printed notes into well-organized digital format using AI technology.</p>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>Visit the home page</li>
+                                <li>Upload your image using drag & drop or click to select</li>
+                                <li>Wait for the AI processing to complete</li>
+                                <li>Get your enhanced, organized notes in markdown format</li>
+                            </ol>
+                        </div>
+                    </section>
+
+                    <!-- Uploading Images -->
+                    <section id="uploading" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Uploading Images</h2>
+                        <div class="prose dark:prose-invert max-w-none">
+                            <p>You can upload images in two ways:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>Drag and drop your image directly onto the upload area</li>
+                                <li>Click the upload area to select an image from your device</li>
+                            </ul>
+                            <p class="mt-4">Supported image formats:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>PNG</li>
+                                <li>JPG</li>
+                                <li>JPEG</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Processing -->
+                    <section id="processing" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Processing</h2>
+                        <div class="prose dark:prose-invert max-w-none">
+                            <p>Our AI-powered processing includes:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>OCR (Optical Character Recognition) to extract text</li>
+                                <li>AI enhancement for better organization</li>
+                                <li>Markdown formatting for clean output</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Output Format -->
+                    <section id="output" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Output Format</h2>
+                        <div class="prose dark:prose-invert max-w-none">
+                            <p>Your notes will be converted to markdown format with:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>Clear headings and subheadings</li>
+                                <li>Properly formatted lists</li>
+                                <li>Code blocks (if present)</li>
+                                <li>Tables (if present)</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Tips & Tricks -->
+                    <section id="tips" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Tips & Tricks</h2>
+                        <div class="prose dark:prose-invert max-w-none">
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>Ensure good lighting when taking photos of notes</li>
+                                <li>Keep the image clear and focused</li>
+                                <li>Avoid shadows and glare on the paper</li>
+                                <li>Use the copy button to quickly copy the output</li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

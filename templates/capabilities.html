@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Capabilities</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Discover the powerful features and capabilities of our Smart Notes Organizer.</p>
+        </div>
+
+        <!-- Capabilities Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- OCR Processing -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-eye text-3xl text-blue-500 dark:text-blue-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white text-center">OCR Processing</h3>
+                <p class="text-gray-600 dark:text-gray-400">
+                    Our advanced OCR technology accurately extracts text from:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mt-2">
+                    <li>Handwritten notes</li>
+                    <li>Printed documents</li>
+                    <li>Images with text</li>
+                    <li>Multiple languages</li>
+                </ul>
+            </div>
+
+            <!-- AI Enhancement -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-brain text-3xl text-green-500 dark:text-green-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white text-center">AI Enhancement</h3>
+                <p class="text-gray-600 dark:text-gray-400">
+                    Our AI system enhances your notes by:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mt-2">
+                    <li>Organizing content logically</li>
+                    <li>Adding missing context</li>
+                    <li>Expanding abbreviations</li>
+                    <li>Suggesting related concepts</li>
+                </ul>
+            </div>
+
+            <!-- Format Support -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-file-alt text-3xl text-purple-500 dark:text-purple-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white text-center">Format Support</h3>
+                <p class="text-gray-600 dark:text-gray-400">
+                    We support various input formats:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mt-2">
+                    <li>PNG images</li>
+                    <li>JPEG/JPG files</li>
+                    <li>High-resolution scans</li>
+                    <li>Mobile phone photos</li>
+                </ul>
+            </div>
+
+            <!-- Output Features -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-file-export text-3xl text-yellow-500 dark:text-yellow-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white text-center">Output Features</h3>
+                <p class="text-gray-600 dark:text-gray-400">
+                    Rich output capabilities include:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mt-2">
+                    <li>Markdown formatting</li>
+                    <li>Code syntax highlighting</li>
+                    <li>Dark mode support</li>
+                    <li>Copy to clipboard</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Additional Features Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white text-center">Additional Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-tachometer-alt text-xl text-indigo-500 dark:text-indigo-400"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Fast Processing</h4>
+                    <p class="text-gray-600 dark:text-gray-400">Quick results in seconds</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-shield-alt text-xl text-red-500 dark:text-red-400"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Secure Processing</h4>
+                    <p class="text-gray-600 dark:text-gray-400">Your data stays private</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-sync text-xl text-teal-500 dark:text-teal-400"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Regular Updates</h4>
+                    <p class="text-gray-600 dark:text-gray-400">Continuous improvements</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center">
+            <a href="/" class="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                <i class="fas fa-arrow-right mr-2"></i>
+                Try It Now
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

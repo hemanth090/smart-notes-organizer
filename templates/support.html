@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Support & Help</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Get help with Smart Notes Organizer and find answers to common questions.</p>
+        </div>
+
+        <!-- Support Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Quick Start Guide -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-rocket text-3xl text-blue-500 dark:text-blue-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white text-center">Quick Start Guide</h3>
+                <ol class="list-decimal list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                    <li>Visit the home page</li>
+                    <li>Upload or drag & drop your image</li>
+                    <li>Wait for AI processing</li>
+                    <li>Copy and use your enhanced notes</li>
+                </ol>
+            </div>
+
+            <!-- Common Issues -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-circle text-3xl text-red-500 dark:text-red-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white text-center">Common Issues</h3>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                    <li>Image upload not working</li>
+                    <li>Processing takes too long</li>
+                    <li>Text recognition errors</li>
+                    <li>Output formatting issues</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+            <h2 class="text-3xl font-bold mb-8 text-gray-800 dark:text-white text-center">Frequently Asked Questions</h2>
+            <div class="space-y-6">
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">What image formats are supported?</h4>
+                    <p class="text-gray-600 dark:text-gray-400">We support PNG, JPG, and JPEG formats. Make sure your images are clear and well-lit for best results.</p>
+                </div>
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">How long does processing take?</h4>
+                    <p class="text-gray-600 dark:text-gray-400">Processing typically takes a few seconds, depending on the image size and complexity of the notes.</p>
+                </div>
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">What if the text recognition is poor?</h4>
+                    <p class="text-gray-600 dark:text-gray-400">Try ensuring good lighting and clear handwriting. You can also try taking a closer photo or scanning the document.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Can I edit the enhanced notes?</h4>
+                    <p class="text-gray-600 dark:text-gray-400">Yes, you can copy the text and edit it in your preferred markdown editor or text processor.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="text-center mt-8">
+            <a href="/" class="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

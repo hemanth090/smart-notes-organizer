@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Notes Organizer</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                    }
+                }
+            }
+        }
+
+        // Theme handling
+        function setTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme === 'dark');
+            } else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark);
+            }
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(!isDark);
+        }
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                setTheme(e.matches);
+            }
+        });
+
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', initTheme);
+
+        // Redirect to home on refresh
+        if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+            window.location.href = '/';
+        }
+    </script>
+    <style>
+        /* Base styles */
+        :root {
+            --transition-duration: 0.3s;
+        }
+
+        * {
+            transition: background-color var(--transition-duration) ease,
+                      color var(--transition-duration) ease,
+                      border-color var(--transition-duration) ease;
+        }
+
+        /* Dark mode styles */
+        .dark {
+            color-scheme: dark;
+        }
+
+        /* Theme toggle button styles */
+        .theme-toggle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-duration) ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(156, 163, 175, 0.1);
+        }
+
+        .theme-toggle i {
+            font-size: 1.25rem;
+            transition: transform var(--transition-duration) ease;
+        }
+
+        .dark .theme-toggle i {
+            transform: rotate(360deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+    <nav class="bg-white dark:bg-gray-800 shadow-lg transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ url_for('index') }}" class="text-xl font-bold text-gray-800 dark:text-white transition-colors">
+                        Smart Notes Organizer
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex space-x-8">
+                        <a href="{{ url_for('index') }}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">Home</a>
+                        <a href="{{ url_for('capabilities') }}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">Capabilities</a>
+                        <a href="{{ url_for('documentation') }}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">Documentation</a>
+                        <a href="{{ url_for('support') }}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">Support</a>
+                    </div>
+                    <button onclick="toggleTheme()" class="theme-toggle">
+                        <i class="fas fa-sun text-yellow-500 dark:hidden"></i>
+                        <i class="fas fa-moon text-blue-300 hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 shadow-lg mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- About Developer -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">About Developer</h3>
+                    <div class="mb-4">
+                        <h4 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Naveen Hemanth Kokkonda</h4>
+                        <p class="text-gray-600 dark:text-gray-400 mb-3">
+                            Pre-final year B.Tech student passionate about crafting innovative solutions at the intersection of Web Development and Artificial Intelligence.
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-400 italic">
+                            "Building the future, one line of code at a time."
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-start space-x-6">
+                        <a href="mailto:naveenhemanth4@gmail.com"
+                           class="flex items-center group">
+                            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 group-hover:bg-gray-200 dark:group-hover:bg-gray-600 transition-colors duration-300">
+                                <i class="fas fa-envelope text-xl text-gray-600 dark:text-gray-400"></i>
+                            </span>
+                        </a>
+                        <a href="https://github.com/hemanth090" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center group">
+                            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 group-hover:bg-gray-200 dark:group-hover:bg-gray-600 transition-colors duration-300">
+                                <i class="fab fa-github text-xl text-gray-600 dark:text-gray-400"></i>
+                            </span>
+                        </a>
+                        <a href="https://linkedin.com/in/hemanthkokkonda" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center group">
+                            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors duration-300">
+                                <i class="fab fa-linkedin-in text-xl text-blue-600 dark:text-blue-400"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="/" class="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Home</a>
+                        </li>
+                        <li>
+                            <a href="/documentation" class="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Documentation</a>
+                        </li>
+                        <li>
+                            <a href="/support" class="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">Support</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Features -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Core Technologies</h3>
+                    <ul class="space-y-4">
+                        <li class="text-blue-600 dark:text-blue-400 font-medium">
+                            <i class="fas fa-star mr-2"></i>
+                            <i class="fas fa-robot mr-2"></i>Google Gemini AI Integration
+                            <span class="text-xs ml-2 text-gray-500 dark:text-gray-400">(Primary)</span>
+                        </li>
+                        <li class="text-blue-600 dark:text-blue-400 font-medium">
+                            <i class="fas fa-star mr-2"></i>
+                            <i class="fas fa-eye mr-2"></i>Tesseract OCR Technology
+                            <span class="text-xs ml-2 text-gray-500 dark:text-gray-400">(Primary)</span>
+                        </li>
+                        <li class="text-blue-600 dark:text-blue-400 font-medium">
+                            <i class="fas fa-star mr-2"></i>
+                            <i class="fas fa-image mr-2"></i>Image Processing with OpenCV
+                            <span class="text-xs ml-2 text-gray-500 dark:text-gray-400">(Primary)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-600 dark:text-gray-400">
+                    &copy; 2024 Smart Notes Organizer. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
