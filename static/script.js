@@ -65,6 +65,11 @@ function handleFiles(e) {
     if (files.length) {
         const file = files[0];
         if (file.type.startsWith('image/')) {
+            // Check file size (limit to 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image size should be less than 5MB. Please choose a smaller image.');
+                return;
+            }
             uploadFile(file);
         } else {
             alert('Please upload an image file');
@@ -81,15 +86,24 @@ function uploadFile(file) {
     dropzone.classList.add('hidden');
     results.classList.add('hidden');
 
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
     fetch('/process_image', {
         method: 'POST',
-        body: formData
+        body: formData,
+        signal: controller.signal
     })
     .then(async response => {
+        clearTimeout(timeoutId);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text(); // Get the raw text first
+        if (!text) {
+            throw new Error('Empty response from server');
+        }
         try {
             return JSON.parse(text); // Try to parse it as JSON
         } catch (e) {
@@ -108,11 +122,16 @@ function uploadFile(file) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while processing the image. Please try again.');
+        if (error.name === 'AbortError') {
+            alert('The request took too long to process. Please try again with a smaller image or better internet connection.');
+        } else {
+            alert('An error occurred while processing the image. Please try again.');
+        }
         resetForm();
     })
     .finally(() => {
         loading.classList.add('hidden');
+        clearTimeout(timeoutId);
     });
 }
 
