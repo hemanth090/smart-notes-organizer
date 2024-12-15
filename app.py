@@ -17,7 +17,16 @@ app = Flask(__name__,
     static_folder='static',
     template_folder='templates'
 )
-CORS(app)  # Enable CORS for all routes
+
+# Configure CORS
+CORS(app, resources={
+    r"/process_image": {
+        "origins": "*",
+        "methods": ["POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
+
 app.secret_key = 'your_secret_key_here'  # Add a secret key for flash messages
 
 # Configure Gemini API
@@ -201,43 +210,47 @@ def support():
 
 @app.route('/process_image', methods=['POST'])
 def analyze_image():
-    logger.debug("Received image upload request")
     logger.debug(f"Request Method: {request.method}")
-    logger.debug(f"Request Headers: {request.headers}")
-    logger.debug(f"Files in request: {request.files}")
+    logger.debug(f"Request Headers: {dict(request.headers)}")
+    logger.debug(f"Request Files: {request.files}")
+    logger.debug(f"Request Form: {request.form}")
     
-    if 'image' not in request.files:
-        logger.error("No image file in request")
-        return jsonify({'error': 'No image provided'}), 400
-    
-    file = request.files['image']
-    if file.filename == '':
-        logger.error("Empty filename")
-        return jsonify({'error': 'No selected file'}), 400
-    
-    if file:
-        try:
-            logger.debug(f"Processing image: {file.filename}")
-            # Open and process the image
-            image = Image.open(file.stream)
-            
-            # Extract text from image
-            extracted_text = process_image(image)
-            if not extracted_text:
-                logger.error("No text extracted from image")
-                return jsonify({'error': 'No text could be extracted from the image'}), 400
-            
-            # Enhance the extracted text
-            enhanced_notes = enhance_notes(extracted_text)
-            logger.debug("Successfully processed image and enhanced notes")
-            
-            return jsonify({
-                'enhanced_notes': enhanced_notes
-            })
-            
-        except Exception as e:
-            logger.error(f"Error processing image: {str(e)}")
-            return jsonify({'error': str(e)}), 400
+    try:
+        if 'image' not in request.files:
+            logger.error("No image file in request")
+            return jsonify({'error': 'No image provided'}), 400
+        
+        file = request.files['image']
+        if file.filename == '':
+            logger.error("Empty filename")
+            return jsonify({'error': 'No selected file'}), 400
+        
+        if file:
+            try:
+                logger.debug(f"Processing image: {file.filename}")
+                # Open and process the image
+                image = Image.open(file.stream)
+                
+                # Extract text from image
+                extracted_text = process_image(image)
+                if not extracted_text:
+                    logger.error("No text extracted from image")
+                    return jsonify({'error': 'No text could be extracted from the image'}), 400
+                
+                # Enhance the extracted text
+                enhanced_notes = enhance_notes(extracted_text)
+                logger.debug("Successfully processed image and enhanced notes")
+                
+                return jsonify({
+                    'enhanced_notes': enhanced_notes
+                })
+                
+            except Exception as e:
+                logger.error(f"Error processing image: {str(e)}")
+                return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return jsonify({'error': 'An unexpected error occurred'}), 500
 
 if __name__ == '__main__':
     # Enable debug mode and set host/port

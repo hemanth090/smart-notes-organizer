@@ -90,37 +90,40 @@ function uploadFile(file) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-    fetch('/process_image', {
+    const apiUrl = window.location.origin + '/process_image';
+    console.log('Sending request to:', apiUrl);
+
+    fetch(apiUrl, {
         method: 'POST',
         body: formData,
         signal: controller.signal
     })
     .then(async response => {
         clearTimeout(timeoutId);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
+        console.log('Received data:', data);
         if (data.error) {
-            alert(data.error);
-            resetForm();
-            return;
+            throw new Error(data.error);
         }
         displayResults(data.enhanced_notes);
     })
     .catch(error => {
         console.error('Error:', error);
-        if (error.name === 'AbortError') {
-            alert('The request took too long to process. Please try again with a smaller image or better internet connection.');
-        } else {
-            alert('An error occurred while processing the image. Please try again.');
-        }
-        resetForm();
+        alert('Error processing image: ' + error.message);
     })
     .finally(() => {
         loading.classList.add('hidden');
+        dropzone.classList.remove('hidden');
         clearTimeout(timeoutId);
     });
 }
