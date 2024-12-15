@@ -85,7 +85,19 @@ function uploadFile(file) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(async response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text(); // Get the raw text first
+        try {
+            return JSON.parse(text); // Try to parse it as JSON
+        } catch (e) {
+            console.error('JSON Parse Error:', e);
+            console.error('Raw response:', text);
+            throw new Error('Invalid JSON response from server');
+        }
+    })
     .then(data => {
         if (data.error) {
             alert(data.error);
@@ -96,7 +108,7 @@ function uploadFile(file) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while processing the image');
+        alert('An error occurred while processing the image. Please try again.');
         resetForm();
     })
     .finally(() => {
