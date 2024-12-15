@@ -24,8 +24,11 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 ENV PORT=10000
 
+# Create upload directory with proper permissions
+RUN mkdir -p /app/uploads && chmod 777 /app/uploads
+
 # Expose the port
 EXPOSE ${PORT}
 
-# Start the application
-CMD gunicorn --bind 0.0.0.0:${PORT} app:app
+# Start the application with gunicorn configuration
+CMD gunicorn --config gunicorn.conf.py app:app
