@@ -73,4 +73,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - The open-source community for various tools and libraries
 
 ---
-Made with ❤️ by Naveenkumar
+Made with ❤️ by Hemanth Kokkonda
+
