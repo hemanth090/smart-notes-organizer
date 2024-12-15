@@ -78,10 +78,15 @@ function handleFiles(e) {
 }
 
 function uploadFile(file) {
+    if (!file || !file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        return;
+    }
+
     const formData = new FormData();
     formData.append('image', file);
 
-    // Show loading indicator
+    // Show loading state
     loading.classList.remove('hidden');
     dropzone.classList.add('hidden');
     results.classList.add('hidden');
@@ -95,13 +100,13 @@ function uploadFile(file) {
 
     fetch(apiUrl, {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-        },
         body: formData,
         signal: controller.signal,
+        mode: 'cors',
         credentials: 'same-origin',
-        mode: 'cors'
+        headers: {
+            'Accept': 'application/json'
+        }
     })
     .then(async response => {
         clearTimeout(timeoutId);
