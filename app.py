@@ -188,7 +188,7 @@ def documentation():
 def support():
     return render_template('support.html')
 
-@app.route('/process', methods=['POST'])
+@app.route('/process_image', methods=['POST'])
 def analyze_image():
     if 'image' not in request.files:
         return jsonify({'error': 'No image provided'}), 400
