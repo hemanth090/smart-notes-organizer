@@ -1,15 +1,15 @@
 # Use Python 3.11 slim image
 FROM python:3.11-slim
 
-# Set working directory
-WORKDIR /app
-
-# Install system dependencies including Tesseract
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     libgl1-mesa-glx \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -22,10 +22,10 @@ COPY . .
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV PORT=5000
+ENV PORT=10000
 
 # Expose the port
-EXPOSE 5000
+EXPOSE ${PORT}
 
 # Start the application
-CMD gunicorn --bind 0.0.0.0:$PORT app:app
+CMD gunicorn --bind 0.0.0.0:${PORT} app:app
